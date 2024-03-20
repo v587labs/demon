@@ -40,6 +40,11 @@
 
 <el-row>
 <el-text tag="b">价格：</el-text> 
+<el-text>{{item.addPrice}}</el-text> 
+</el-row>
+
+<el-row>
+<el-text tag="b">均价：</el-text> 
 <el-text>{{item.price}}</el-text> 
 </el-row>
 
@@ -110,6 +115,7 @@ const onSubmit = () => {
             let nowProfit = (nowPrice - last.price) * formInline.rate * nowCost;
 
             list.push({
+                "addPrice": price,
                 "price": nowPrice,
                 "num": nowNum,
                 "cost": nowCost,
