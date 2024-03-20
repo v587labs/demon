@@ -14,10 +14,12 @@
     "element-plus": "^2.6.1",
     "nuxt": "^3.10.3",
     "pinia": "^2.1.7",
+    "unocss": "^0.58.6",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@element-plus/nuxt": "^1.0.7"
+    "@element-plus/nuxt": "^1.0.7",
+    "@unocss/nuxt": "^0.58.6"
   }
 }

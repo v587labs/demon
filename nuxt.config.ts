@@ -2,5 +2,5 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  modules: ['@element-plus/nuxt', '@pinia/nuxt'],
+  modules: ['@element-plus/nuxt', '@pinia/nuxt'], 
 })
