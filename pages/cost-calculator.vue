@@ -36,8 +36,18 @@
             <div class="card-header">
                 <span>{{index==0?'成本':'加仓 '+index}}</span>
             </div>
-        </template>
-        <p v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</p>
+        </template> 
+
+<el-row>
+<el-text tag="b">价格：</el-text> 
+<el-text>{{item.price}}</el-text> 
+</el-row>
+
+<el-row>
+<el-text tag="b">成本：</el-text> 
+<el-text>{{formInline.addCost}} / {{item.cost}}</el-text> 
+</el-row> 
+ 
         <template #footer>
             收益：  <el-text v-if="item.profit<0" class="mx-1" type="danger">{{item.profit}}  (-{{item.profitRate}} %)</el-text>
             <el-text v-else-if="item.profit==0" class="mx-1"  >{{item.profit}}</el-text>
@@ -63,8 +73,8 @@ useHead({
 })
 
 const formInline = reactive({
-    open: 1,
-    cost: 10,
+    open: 0,
+    cost: 0,
     rate: 5,
     addRate: -0.01,
     addCost: 10,

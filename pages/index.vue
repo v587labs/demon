@@ -5,3 +5,9 @@
         </nuxt-link>
     </div>
 </template>
+
+<script lang="ts" setup>
+useHead({
+    title: '区块链工具箱', 
+})
+</script>
