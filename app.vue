@@ -3,3 +3,4 @@
     <NuxtPage></NuxtPage>
   </el-config-provider>
 </template>
+ 
