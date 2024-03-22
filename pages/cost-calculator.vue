@@ -99,6 +99,7 @@ const onSubmit = () => {
 
         if (i == 0) {
             list.push({
+                "addPrice": formInline.open,
                 "price": formInline.open,
                 "num": formInline.cost / formInline.open,
                 "cost": formInline.cost,
@@ -107,16 +108,16 @@ const onSubmit = () => {
             })
         } else {
             let last = list[i - 1];
-            let price = last.price * (1 + formInline.addRate * i);
+            let addPrice = last.addPrice * (1 + formInline.addRate * i); // 加仓价格 
             let cost = formInline.addCost;
-            let num = cost / price;
+            let num = cost / addPrice; // 加仓数量
             let nowCost = last.cost + cost;
             let nowNum = num + last.num;
             let nowPrice = nowCost / nowNum;
             let nowProfit = (nowPrice - last.price) * formInline.rate * nowNum;
 
             list.push({
-                "addPrice": price,
+                "addPrice": addPrice,
                 "price": nowPrice,
                 "num": nowNum,
                 "cost": nowCost,
