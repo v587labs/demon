@@ -27,6 +27,7 @@
         </el-form-item>
         <div></div>
         <el-form-item>
+            <el-button type="default" @click="onReset">重置</el-button>
             <el-button type="primary" @click="onSubmit">计算</el-button>
         </el-form-item>
     </el-form>
@@ -53,11 +54,17 @@
             <el-text>{{ formInline.addCost }} / {{ item.cost }}</el-text>
         </el-row>
 
+
+        <el-row>
+            <el-text tag="b">数量：</el-text>
+            <el-text>{{ item.num }} </el-text>
+        </el-row>
+
         <template #footer>
-            收益： <el-text v-if="item.profit < 0" class="mx-1" type="danger">{{ item.profit }} (-{{ item.profitRate }}
-                %)</el-text>
+            收益： <el-text v-if="item.profit < 0" class="mx-1" type="danger">{{ item.profit }} (-{{ item.profitRate
+                }}%)</el-text>
             <el-text v-else-if="item.profit == 0" class="mx-1">{{ item.profit }}</el-text>
-            <el-text v-else class="mx-1">{{ item.profit }} ({{ item.profitRate }} %)</el-text>
+            <el-text v-else class="mx-1" type="success">{{ item.profit }} ({{ item.profitRate }} %)</el-text>
 
         </template>
     </el-card>
@@ -66,6 +73,11 @@
 <script lang="ts" setup>
 
 import { reactive } from 'vue'
+import { ethers } from "ethers";
+// https://mikemcl.github.io/bignumber.js/
+import BigNumber from "bignumber.js";
+BigNumber.set({ DECIMAL_PLACES: 18, ROUNDING_MODE: 4 })
+
 
 useHead({
     title: '合约成本计算器',
@@ -78,7 +90,7 @@ useHead({
     //   script: [ { innerHTML: 'console.log(\'Hello world\')' } ]
 })
 
-const formInline = reactive({
+const formInline = ref({
     open: 0,
     cost: 0,
     rate: 5,
@@ -90,31 +102,43 @@ const formInline = reactive({
 
 const listRef = ref([]);
 
+
+const onReset = () => {
+    formInline.value = {
+        open: 0,
+        cost: 0,
+        rate: 5,
+        addRate: -0.01,
+        addCost: 10,
+        addNum: 10,
+
+    }
+}
+
 const onSubmit = () => {
 
     let list = [];
-
-    for (let i = 0; i < formInline.addNum + 1; i++) {
+    for (let i = 0; i < formInline.value.addNum + 1; i++) {
         console.log(i)
 
         if (i == 0) {
             list.push({
-                "addPrice": formInline.open,
-                "price": formInline.open,
-                "num": formInline.cost / formInline.open,
-                "cost": formInline.cost,
-                "profit": 0,
-                "profitRate": 0,
+                "addPrice": new BigNumber(formInline.value.open),
+                "price": new BigNumber(formInline.value.open),
+                "num": new BigNumber(formInline.value.cost / formInline.value.open),
+                "cost": new BigNumber(formInline.value.cost),
+                "profit": new BigNumber(0),
+                "profitRate": new BigNumber(0),
             })
         } else {
             let last = list[i - 1];
-            let addPrice = last.addPrice * (1 + formInline.addRate * i); // 加仓价格 
-            let cost = formInline.addCost;
-            let num = cost / addPrice; // 加仓数量
-            let nowCost = last.cost + cost;
-            let nowNum = num + last.num;
-            let nowPrice = nowCost / nowNum;
-            let nowProfit = (nowPrice - last.price) * formInline.rate * nowNum;
+            let addPrice = list[0].addPrice.multipliedBy(1 + formInline.value.addRate * i); // 加仓价格 
+            let cost = new BigNumber(formInline.value.cost);
+            let num = cost.div(addPrice);// cost / addPrice; // 加仓数量
+            let nowCost = last.cost.plus(cost);
+            let nowNum = num.plus(last.num);
+            let nowPrice = nowCost.div(nowNum);
+            let nowProfit = nowPrice.minus(last.price).multipliedBy(formInline.value.rate).multipliedBy(nowNum);
 
             list.push({
                 "addPrice": addPrice,
@@ -122,7 +146,8 @@ const onSubmit = () => {
                 "num": nowNum,
                 "cost": nowCost,
                 "profit": nowProfit,
-                "profitRate": (1 - (nowCost + nowProfit) / nowCost) * 100,
+                // (1 - (nowCost + nowProfit) / nowCost) * 100,
+                "profitRate": (new BigNumber(1)).minus(nowCost.plus(nowProfit).div(nowCost)).multipliedBy(100),
             })
         }
 

@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "bignumber.js": "^9.1.2",
     "element-plus": "^2.6.1",
+    "ethers": "^6.11.1",
     "nuxt": "^3.10.3",
     "pinia": "^2.1.7",
     "unocss": "^0.58.6",
