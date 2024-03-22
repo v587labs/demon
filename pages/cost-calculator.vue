@@ -64,7 +64,7 @@
             收益： <el-text v-if="item.profit < 0" class="mx-1" type="danger">{{ item.profit }} (-{{ item.profitRate
                 }}%)</el-text>
             <el-text v-else-if="item.profit == 0" class="mx-1">{{ item.profit }}</el-text>
-            <el-text v-else class="mx-1" type="success">{{ item.profit }} ({{ item.profitRate }} %)</el-text>
+            <el-text v-else class="mx-1" type="success">{{ item.profit }} ({{ item.profitRate.toFixed(2 ) }} %)</el-text>
 
         </template>
     </el-card>
@@ -76,7 +76,7 @@ import { reactive } from 'vue'
 import { ethers } from "ethers";
 // https://mikemcl.github.io/bignumber.js/
 import BigNumber from "bignumber.js";
-BigNumber.set({ DECIMAL_PLACES: 18, ROUNDING_MODE: 4 })
+BigNumber.set({ DECIMAL_PLACES: 6, ROUNDING_MODE: 4 })
 
 
 useHead({
